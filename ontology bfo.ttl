@@ -1,0 +1,100 @@
+@prefix :    <https://hyberion.example/ontology/se/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix iao: <http://purl.obolibrary.org/obo/IAO_> .
+@base <https://hyberion.example/ontology/se/> .
+
+<https://hyberion.example/ontology/se/>
+    rdf:type owl:Ontology ;
+    owl:versionIRI <https://hyberion.example/ontology/se/1.0.0> ;
+    owl:imports <http://purl.obolibrary.org/obo/bfo/2020/bfo-core.owl> ;
+    owl:imports <http://purl.obolibrary.org/obo/iao/2026-03-30/iao.owl> ;
+    rdfs:label "Systems Engineering Ontology"^^xsd:string .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  se:hasParticipant
+###  Sub-property of bfo:has-participant (BFO_0000057)
+###  All-some rule: true of every SystemOperationProcess — it has a robotic system participant
+:hasParticipant rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://purl.obolibrary.org/obo/BFO_0000057> ;
+    owl:inverseOf :isParticipantIn ;
+    rdfs:domain :SystemOperationProcess ;
+    rdfs:range  :RoboticSystem ;
+    iao:0000115 "A relation between a system operation process and a robotic system that participates in it."^^xsd:string .
+
+###  se:isParticipantIn
+###  Sub-property of bfo:participates-in (BFO_0000056)
+:isParticipantIn rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://purl.obolibrary.org/obo/BFO_0000056> ;
+    owl:inverseOf :hasParticipant ;
+    rdfs:domain :RoboticSystem ;
+    rdfs:range  :SystemOperationProcess ;
+    iao:0000115 "A relation between a robotic system and a system operation process in which it participates."^^xsd:string .
+
+###  se:hasFunctionOf
+###  Sub-property of bfo:has-function (BFO_0000085)
+###  All-some rule: true of every RoboticSystem — it always bears a function
+:hasFunctionOf rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://purl.obolibrary.org/obo/BFO_0000085> ;
+    rdfs:domain :RoboticSystem ;
+    rdfs:range  :SystemFunction ;
+    iao:0000115 "A relation between a robotic system and a function that inheres in it."^^xsd:string .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  se:RoboticSystem
+###  Genus: bfo:MaterialEntity (BFO_0000040)
+###  Differentia: engineering system, automated physical tasks, designated operational environment
+:RoboticSystem rdf:type owl:Class ;
+    rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000040> ;
+    rdfs:label "RoboticSystem"^^xsd:string ;
+    iao:0000115 "A material entity that is an engineering system which is designed to perform automated physical tasks in a designated operational environment."^^xsd:string .
+
+###  se:SystemOperationProcess
+###  Genus: bfo:Process (BFO_0000015)
+###  Differentia: engineering system actively deployed, realises designated function
+:SystemOperationProcess rdf:type owl:Class ;
+    rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000015> ;
+    rdfs:label "SystemOperationProcess"^^xsd:string ;
+    iao:0000115 "A process during which an engineering system is actively deployed to realise its designated function in a specific operational environment."^^xsd:string .
+
+###  se:SystemFunction
+###  Genus: bfo:Function (BFO_0000034), a kind of disposition
+###  Differentia: inheres in engineering system, constitutes its designated operational role
+:SystemFunction rdf:type owl:Class ;
+    rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000034> ;
+    rdfs:label "SystemFunction"^^xsd:string ;
+    iao:0000115 "A function that inheres in an engineering system and the realisation of which constitutes the system's designated operational role."^^xsd:string .
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  ind:ARM7-Delta — the robotic system (independent continuant)
+:ARM7-Delta rdf:type owl:NamedIndividual ,
+                     :RoboticSystem ;
+    :hasFunctionOf :ARM7-Delta-weldingFunction ;
+    rdfs:label "ARM7-Delta welding robot"^^xsd:string .
+
+###  ind:ARM7-Delta-weldingFunction — the function inhering in ARM7-Delta (disposition)
+:ARM7-Delta-weldingFunction rdf:type owl:NamedIndividual ,
+                                     :SystemFunction ;
+    rdfs:label "Automated arc-welding function of ARM7-Delta"^^xsd:string .
+
+###  ind:OP-2024-03-15-WeldLine4 — the operation process (occurrent)
+###  No sudden death: ARM7-Delta persists after this process ends
+:OP-2024-03-15-WeldLine4 rdf:type owl:NamedIndividual ,
+                                   :SystemOperationProcess ;
+    :hasParticipant :ARM7-Delta ;
+    rdfs:label "Weld-line 4 operation run 2024-03-15"^^xsd:string .
+
+###  Generated by the OWL API / cleaned for BFO compliance
